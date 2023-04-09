@@ -22,14 +22,13 @@ var stores = map[string]string{
 }
 
 const idFlag = "id"
-const idStoreFlag = "store"
 
 // InitBeersCmd initialize beers command
 func InitBeersCmd() *cobra.Command {
 	beersCmd := &cobra.Command{
 		Use:   "beers",
 		Short: "Print data about beers",
-		Run:   runBeersFn(),
+		Run:   runCmdFn(&beers),
 	}
 
 	beersCmd.Flags().StringP(idFlag, "i", "", "id of the beer")
@@ -42,34 +41,22 @@ func InitStoresCmd() *cobra.Command {
 	storesCmd := &cobra.Command{
 		Use:   "stores",
 		Short: "Print data about stores",
-		Run:   runStoresFn(),
+		Run:   runCmdFn(&stores),
 	}
 
-	storesCmd.Flags().StringP(idStoreFlag, "s", "", "id of the store")
+	storesCmd.Flags().StringP(idFlag, "i", "", "id of the store")
 
 	return storesCmd
 }
 
-func runStoresFn() CobraFn {
-	return func(cmd *cobra.Command, args []string) {
-		id, _ := cmd.Flags().GetString(idStoreFlag)
-
-		if id != "" {
-			fmt.Println(stores[id])
-		} else {
-			fmt.Println(stores)
-		}
-	}
-}
-
-func runBeersFn() CobraFn {
+func runCmdFn(data *map[string]string) CobraFn {
 	return func(cmd *cobra.Command, args []string) {
 		id, _ := cmd.Flags().GetString(idFlag)
 
 		if id != "" {
-			fmt.Println(beers[id])
+			fmt.Println((*data)[id])
 		} else {
-			fmt.Println(beers)
+			fmt.Println(*data)
 		}
 	}
 }
